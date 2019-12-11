@@ -56,8 +56,9 @@ For more information, please refer to <http://unlicense.org/>
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/socket.h>
-#include <sys/sysmacros.h>
+//#include <sys/sysmacros.h>
 #include <netinet/tcp.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
 #include <fnmatch.h>
@@ -1813,7 +1814,7 @@ static void flushMemory(void)
    dummy = mmap(
        0, (FLUSH_PAGES*PAGE_SIZE),
        PROT_READ|PROT_WRITE|PROT_EXEC,
-       MAP_SHARED|MAP_ANONYMOUS|MAP_NORESERVE|MAP_LOCKED,
+       MAP_SHARED|MAP_ANONYMOUS/*|MAP_NORESERVE|MAP_LOCKED*/,
        -1, 0);
 
    if (dummy == MAP_FAILED)
@@ -7251,7 +7252,7 @@ static uint32_t * initMapMem(int fd, uint32_t addr, uint32_t len)
 {
     return (uint32_t *) mmap(0, len,
        PROT_READ|PROT_WRITE|PROT_EXEC,
-       MAP_SHARED|MAP_LOCKED,
+       /*MAP_SHARED|MAP_LOCKED*/0,
        fd, addr);
 }
 
@@ -7419,7 +7420,7 @@ static int initZaps
             (void *)pageAdr,
             PAGE_SIZE,
             PROT_READ|PROT_WRITE,
-            MAP_SHARED|MAP_FIXED|MAP_LOCKED|MAP_NORESERVE,
+            MAP_SHARED|MAP_FIXED/*|MAP_LOCKED|MAP_NORESERVE*/,
             fdMem,
             physical
          );
@@ -7444,7 +7445,7 @@ static int initPagemapBlock(int block)
    dmaPMapBlk[block] = mmap(
        0, (PAGES_PER_BLOCK*PAGE_SIZE),
        PROT_READ|PROT_WRITE,
-       MAP_SHARED|MAP_ANONYMOUS|MAP_NORESERVE|MAP_LOCKED,
+       MAP_SHARED|MAP_ANONYMOUS/*|MAP_NORESERVE|MAP_LOCKED*/,
        -1, 0);
 
    if (dmaPMapBlk[block] == MAP_FAILED)
@@ -7463,7 +7464,7 @@ static int initPagemapBlock(int block)
    dmaVirt[pageNum] = mmap(
        0, (PAGES_PER_BLOCK*PAGE_SIZE),
        PROT_READ|PROT_WRITE,
-       MAP_SHARED|MAP_ANONYMOUS|MAP_NORESERVE|MAP_LOCKED,
+       MAP_SHARED|MAP_ANONYMOUS/*|MAP_NORESERVE|MAP_LOCKED*/,
        -1, 0);
 
    if (dmaVirt[pageNum] == MAP_FAILED)
@@ -7554,7 +7555,7 @@ static int initAllocDMAMem(void)
    dmaVirt = mmap(
        0, PAGES_PER_BLOCK*(bufferBlocks+PI_WAVE_BLOCKS)*sizeof(dmaPage_t *),
        PROT_READ|PROT_WRITE,
-       MAP_PRIVATE|MAP_ANONYMOUS|MAP_LOCKED,
+       MAP_PRIVATE|MAP_ANONYMOUS/*|MAP_LOCKED*/,
        -1, 0);
 
    if (dmaVirt == MAP_FAILED)
@@ -7563,7 +7564,7 @@ static int initAllocDMAMem(void)
    dmaBus = mmap(
        0, PAGES_PER_BLOCK*(bufferBlocks+PI_WAVE_BLOCKS)*sizeof(dmaPage_t *),
        PROT_READ|PROT_WRITE,
-       MAP_PRIVATE|MAP_ANONYMOUS|MAP_LOCKED,
+       MAP_PRIVATE|MAP_ANONYMOUS/*|MAP_LOCKED*/,
        -1, 0);
 
    if (dmaBus == MAP_FAILED)
@@ -7584,7 +7585,7 @@ static int initAllocDMAMem(void)
       dmaPMapBlk = mmap(
           0, (bufferBlocks+PI_WAVE_BLOCKS)*sizeof(dmaPage_t *),
           PROT_READ|PROT_WRITE,
-          MAP_PRIVATE|MAP_ANONYMOUS|MAP_LOCKED,
+          MAP_PRIVATE|MAP_ANONYMOUS/*|MAP_LOCKED*/,
           -1, 0);
 
       if (dmaPMapBlk == MAP_FAILED)
@@ -7617,7 +7618,7 @@ static int initAllocDMAMem(void)
       dmaMboxBlk = mmap(
           0, (bufferBlocks+PI_WAVE_BLOCKS)*sizeof(DMAMem_t),
           PROT_READ|PROT_WRITE,
-          MAP_PRIVATE|MAP_ANONYMOUS|MAP_LOCKED,
+          MAP_PRIVATE|MAP_ANONYMOUS/*|MAP_LOCKED*/,
           -1, 0);
 
       if (dmaMboxBlk == MAP_FAILED)
@@ -11774,13 +11775,13 @@ int gpioNotifyOpenWithSize(int bufSize)
 
    if (bufSize != 0)
    {
-      i = fcntl(fd, F_SETPIPE_SZ, bufSize);
-      if (i != bufSize)
-      {
-         gpioNotify[slot].state = PI_NOTIFY_CLOSED;
-         SOFT_ERROR(PI_BAD_PATHNAME,
-            "fcntl %s size %d failed (%m)", name, bufSize);
-      }
+//      i = fcntl(fd, F_SETPIPE_SZ, bufSize);
+//      if (i != bufSize)
+//      {
+//         gpioNotify[slot].state = PI_NOTIFY_CLOSED;
+//         SOFT_ERROR(PI_BAD_PATHNAME,
+//            "fcntl %s size %d failed (%m)", name, bufSize);
+//      }
    }
 
    gpioNotify[slot].seqno = 0;

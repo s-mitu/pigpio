@@ -42,6 +42,7 @@ This version is for pigpio version 69+
 #include <string.h>
 #include <signal.h>
 #include <ctype.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
 #include <netdb.h>
 

@@ -42,6 +42,7 @@ For more information, please refer to <http://unlicense.org/>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <sys/select.h>
 
